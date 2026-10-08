@@ -43,7 +43,7 @@ fun Matcher<View>.isViewClickable(viewIndex: Int = 0): Boolean {
         waitForViewVisible(2)
         onView(withIndex(this, viewIndex)).check(ViewAssertions.matches(ViewMatchers.isClickable()))
         true
-    } catch (_: UITestingExceptions) {
+    } catch (_: Throwable) {
         false
     }
 }
@@ -89,13 +89,12 @@ fun Matcher<View>.assertIsViewDisplayedScrollTo() {
  * for asserting if text is visible on screen in time
  */
 fun isTextOnScreen(textOnScreen: String, timeInSec: Int = 1): Boolean {
-
     repeat(timeInSec) {
         try {
-            ViewMatchers.withText(textOnScreen).waitForViewVisible(timeInSec)
+            onView(ViewMatchers.withText(textOnScreen)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
             return true
-        } catch (_: UITestingExceptions) {
-            Thread.sleep(1000)
+        } catch (_: Throwable) {
+            Thread.sleep(500)
         }
     }
     return false
